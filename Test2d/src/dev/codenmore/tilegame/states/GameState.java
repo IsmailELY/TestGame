@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import dev.codenmore.tilegame.Game;
 import dev.codenmore.tilegame.entities.*;
+import dev.codenmore.tilegame.tiles.Tile;
 
 public class GameState extends State
 {
@@ -18,6 +19,12 @@ public class GameState extends State
 	@Override
 	public void render(Graphics g) 
 	{
+		for(int i=0;i<22;i++)
+		{
+			for (int j=0;j<12;j++)
+				Tile.tiles[0].render(g, i*32, j*32);	
+			Tile.tiles[1].render(g,32*i , 12*32);
+		}
 		player.render(g);
 	}
 
