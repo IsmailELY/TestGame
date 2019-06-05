@@ -2,11 +2,13 @@ package dev.codenmore.tilegame.states;
 
 import java.awt.Graphics;
 
+import dev.codenmore.tilegame.Game;
+
 public class SettingState extends State {
 	
-	public SettingState() 
+	public SettingState(Game game)
 	{
-
+		super(game);
 	}
 	
 	@Override

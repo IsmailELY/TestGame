@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 public class Assets 
 {
-	private static final int p_width=32,p_height=48;
+	public static final int p_width=32,p_height=48;
 	
 	public static BufferedImage p_front,p_back,p_left,p_right;
 	

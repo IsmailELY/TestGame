@@ -2,18 +2,23 @@ package dev.codenmore.tilegame;
 
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+
+import dev.codenmore.tilegame.input.*;
+
 import dev.codenmore.tilegame.states.*;
 import dev.codenmore.tilegame.d.*;
 import dev.codenmore.tilegame.gfx.*;
 
 public class Game implements Runnable
 {
+	//attributes
 	private Display display;
 	public int width,height;
 	public Thread thread;
 	public boolean running = false;
 	public String title;
 	
+	//graphics
 	private BufferStrategy bs;
 	private Graphics g;
 	
@@ -22,26 +27,39 @@ public class Game implements Runnable
 	private State menuState;
 	private State settingState;
 	
+	//input
+	private KeyManager keyManager;
+	
+	public KeyManager getKeyManager()
+	{
+		return keyManager;
+	}
+	
 	public Game(String title,int width,int height)
 	{
 		this.height=height;
 		this.width=width;
 		this.title=title;
+		this.keyManager  = new KeyManager();
 	}
 	
 	private void init ()
 	{
 		display = new Display(title, width, height);
+		display.getJFrame().addKeyListener(keyManager);
 		Assets.init();
-		gameState = new GameState();
-		menuState = new MenuState();
-		settingState = new SettingState();
+		
+		gameState = new GameState(this);
+		menuState = new MenuState(this);
+		settingState = new SettingState(this);
 		
 		State.setState(gameState);
 	}
 	
 	private void tick ()
 	{
+		keyManager.tick();
+		
 		if (State.getState()!=null)
 			State.getState().tick();
 	}

@@ -2,19 +2,41 @@ package dev.codenmore.tilegame.entities;
 
 import java.awt.Graphics;
 
+import dev.codenmore.tilegame.Game;
 import dev.codenmore.tilegame.gfx.Assets;
 
 public class Player extends Creature {
-
-	public Player(int x, int y, int health) {
+	
+	private Game game;
+	
+	public Player(Game game, int x, int y, int health) {
 		super(x, y, health);
-		// TODO Auto-generated constructor stub
+		this.game = game;
 	}
 
 	@Override
-	public void tick() {
-		// TODO Auto-generated method stub
-
+	public void tick() 
+	{
+		if(game.getKeyManager().up)
+		{
+			if (y>=0)
+				y-=2;
+		}
+		else if (game.getKeyManager().down)
+		{
+			if (y<=game.height-Assets.p_height)
+				y+=2;
+		}
+		else if (game.getKeyManager().left)
+		{
+			if (x>=0)
+				x-=2;
+		}
+		else if (game.getKeyManager().right)
+		{
+			if (x<=game.width-Assets.p_width)
+				x+=2;
+		}
 	}
 
 	@Override
@@ -22,5 +44,6 @@ public class Player extends Creature {
 		g.drawImage(Assets.p_front,x,y,null);
 
 	}
+	
 
 }
