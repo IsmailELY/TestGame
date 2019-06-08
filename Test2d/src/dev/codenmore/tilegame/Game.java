@@ -1,5 +1,6 @@
 package dev.codenmore.tilegame;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
@@ -13,7 +14,54 @@ public class Game implements Runnable
 {
 	//attributes
 	private Display display;
-	public int width,height;
+	private int width,height;
+	
+	public Display getDisplay() {
+		return display;
+	}
+
+	public Thread getThread() {
+		return thread;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public BufferStrategy getBs() {
+		return bs;
+	}
+
+	public Graphics getG() {
+		return g;
+	}
+
+	public State getGameState() {
+		return gameState;
+	}
+
+	public State getMenuState() {
+		return menuState;
+	}
+
+	public State getSettingState() {
+		return settingState;
+	}
+	
+	public int getWidth() 
+	{
+		return width;
+	}
+
+	public int getHeight() 
+	{
+		return height;
+	}
+
 	public Thread thread;
 	public boolean running = false;
 	public String title;
@@ -30,9 +78,20 @@ public class Game implements Runnable
 	//input
 	private KeyManager keyManager;
 	
+	//Camera
+	private GameCamera gameCamera;
+	
+	//Handler
+	private Handler handler;
+	
 	public KeyManager getKeyManager()
 	{
 		return keyManager;
+	}
+	
+	public GameCamera getGameCamera()
+	{
+		return gameCamera;
 	}
 	
 	public Game(String title,int width,int height)
@@ -49,9 +108,11 @@ public class Game implements Runnable
 		display.getJFrame().addKeyListener(keyManager);
 		Assets.init();
 		
-		gameState = new GameState(this);
-		menuState = new MenuState(this);
-		settingState = new SettingState(this);
+		this.handler = new Handler(this);
+		gameCamera = new GameCamera(this,0, 0);		
+		gameState = new GameState(this.handler);
+		menuState = new MenuState(this.handler);
+		settingState = new SettingState(this.handler);
 		
 		State.setState(gameState);
 	}
@@ -73,7 +134,8 @@ public class Game implements Runnable
 			return;
 		}
 		g = bs.getDrawGraphics();
-		g.clearRect(0, 0, width, height);
+		g.setColor(Color.black);
+		g.fillRect(0, 0, width, height);
 		
 		if (State.getState()!=null)
 			State.getState().render(g);

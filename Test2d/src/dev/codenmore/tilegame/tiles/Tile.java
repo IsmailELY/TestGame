@@ -10,6 +10,11 @@ public class Tile
 	public static Tile grassTile = new GrassTile(0);
 	public static Tile cliffTile = new CliffTile(1);
 	public static Tile sandTile = new SandTile(2);
+	public static Tile lakeTile = new LakeTile(3);
+	public static Tile grass2Tile = new Grass_2(11);
+	public static Tile sand2Tile = new Sand_2(13);
+	public static Tile magmaTile = new MagmaTile(4);
+	public static Tile magma2Tile = new Magma_2(14);
 	
 	//CLASS
 	public static final int TILEWIDTH = 32, TILEHEIGHT = 32;

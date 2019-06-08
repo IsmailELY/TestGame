@@ -1,5 +1,7 @@
 package dev.codenmore.tilegame.entities;
 
+import dev.codenmore.tilegame.Handler;
+
 public abstract class Creature extends Entity 
 {
 	public static final int DEFAULT_HEALTH = 10, DEFAULT_WIDTH = 32, DEFAULT_HEIGHT = 32;
@@ -10,9 +12,9 @@ public abstract class Creature extends Entity
 	protected float speed;
 	protected float xMove,yMove;
 	
-	public Creature(float x, float y,int width, int height,int health) 
+	public Creature(Handler handler,float x, float y,int width, int height,int health) 
 	{
-		super(x, y, width, height);
+		super(handler,x, y, width, height);
 		this.health = DEFAULT_HEALTH;
 		this.speed = DEFAULT_SPEED;
 		xMove = 0;
@@ -30,15 +32,18 @@ public abstract class Creature extends Entity
 		return health;
 	}
 
-	public void setHealth(int health) {
+	public void setHealth(int health) 
+	{
 		this.health = health;
 	}
 
-	public float getSpeed() {
+	public float getSpeed() 
+	{
 		return speed;
 	}
 
-	public void setSpeed(float speed) {
+	public void setSpeed(float speed) 
+	{
 		this.speed = speed;
 	}
 }

@@ -2,35 +2,34 @@ package dev.codenmore.tilegame.states;
 
 import java.awt.Graphics;
 
-import dev.codenmore.tilegame.Game;
+import dev.codenmore.tilegame.Handler;
 import dev.codenmore.tilegame.entities.*;
-import dev.codenmore.tilegame.tiles.Tile;
+import dev.codenmore.tilegame.worlds.*;
 
 public class GameState extends State
 {
 	private Player player;
+	private World world;
 	
-	public GameState(Game game)
+	public GameState(Handler handler)
 	{
-		super(game);
-		this.player=new Player(game,0, 0, 100);
+		super(handler);
+		world = new World(handler,"res/worlds/world1.txt");
+		handler.setWorld(world);
+		this.player=new Player(handler, world.getSpawnX()*32,world.getSpawnY()*32, 100);
 	}
 
 	@Override
 	public void render(Graphics g) 
 	{
-		for(int i=0;i<22;i++)
-		{
-			for (int j=0;j<12;j++)
-				Tile.tiles[0].render(g, i*32, j*32);	
-			Tile.tiles[1].render(g,32*i , 12*32);
-		}
+		world.render(g);
 		player.render(g);
 	}
 
 	@Override
 	public void tick() 
 	{
+		world.tick();
 		player.tick();
 	}
 	

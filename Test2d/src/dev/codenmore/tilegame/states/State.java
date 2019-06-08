@@ -2,7 +2,7 @@ package dev.codenmore.tilegame.states;
 
 import java.awt.Graphics;
 
-import dev.codenmore.tilegame.Game;
+import dev.codenmore.tilegame.Handler;
 
 public abstract class State 
 {
@@ -19,11 +19,11 @@ public abstract class State
 	}
 	
 	//Class
-	private Game game;
+	private Handler handler;
 	
-	public State(Game game)
+	public State(Handler handler)
 	{
-		this.game=game;
+		this.handler=handler;
 	}
 	
 	abstract public void render(Graphics g);
