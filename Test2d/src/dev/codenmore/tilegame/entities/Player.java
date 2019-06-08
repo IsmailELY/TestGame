@@ -1,5 +1,6 @@
 package dev.codenmore.tilegame.entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import dev.codenmore.tilegame.Handler;
@@ -11,6 +12,11 @@ public class Player extends Creature {
 	
 	public Player(Handler handler,float x, float y, int health) {
 		super(handler,x, y,Creature.DEFAULT_WIDTH,57, health);
+		this.bounds.y=3*height/4;
+		this.bounds.height=height/4;
+		this.bounds.x=2;
+		this.bounds.width=width-3;
+		
 	}
 
 	@Override
@@ -42,12 +48,12 @@ public class Player extends Creature {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g) 
+	{
 		if (face)
 			g.drawImage(Assets.p_front,(int)(x - handler.getGameCamera().getxOffset()),(int)(y- handler.getGameCamera().getyOffset()),width,57,null);
 		else
 			g.drawImage(Assets.p_back,(int)(x - handler.getGameCamera().getxOffset()),(int)(y- handler.getGameCamera().getyOffset()),width,57,null);
 	}
 	
-
 }

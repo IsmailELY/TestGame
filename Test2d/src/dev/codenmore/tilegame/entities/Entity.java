@@ -1,6 +1,7 @@
 package dev.codenmore.tilegame.entities;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import dev.codenmore.tilegame.Handler;
 
@@ -9,6 +10,7 @@ public abstract class Entity
 	protected int height,width;
 	protected float x,y;
 	protected Handler handler;
+	protected Rectangle bounds;
 	
 	public Entity(Handler handler,float x,float y,int width, int height)
 	{
@@ -17,6 +19,8 @@ public abstract class Entity
 		this.height=height;
 		this.width=width;
 		this.handler=handler;
+		
+		bounds = new Rectangle(0,0,width,height);
 	}
 	
 	abstract public void tick();
