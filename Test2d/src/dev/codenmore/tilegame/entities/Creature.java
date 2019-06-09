@@ -5,7 +5,7 @@ import dev.codenmore.tilegame.tiles.Tile;
 
 public abstract class Creature extends Entity 
 {
-	public static final int DEFAULT_HEALTH = 10, DEFAULT_WIDTH = 32, DEFAULT_HEIGHT = 32;
+	public static final int DEFAULT_HEALTH = 10, DEFAULT_WIDTH = 64, DEFAULT_HEIGHT = 66;
 	public static final float DEFAULT_SPEED = 3.0f;
 	
 	

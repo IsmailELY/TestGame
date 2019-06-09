@@ -1,12 +1,12 @@
 package dev.codenmore.tilegame.gfx;
 
-import dev.codenmore.tilegame.Game;
+import dev.codenmore.tilegame.Handler;
 import dev.codenmore.tilegame.entities.Entity;
 
 public class GameCamera 
 {
 	private float xOffset,yOffset;
-	private Game game;
+	private Handler handler;
 	
 	public float getxOffset() {
 		return xOffset;
@@ -16,12 +16,34 @@ public class GameCamera
 	{
 		xOffset += xAmt;
 		yOffset += yAmt;
+		checkBlankSpace();
 	}
 	
+	public void checkBlankSpace()
+	{
+		if(xOffset<0)
+		{
+			xOffset=0;
+		}
+		else if(xOffset>handler.getWorld().getWidth()-handler.getWidth())
+		{
+			xOffset=handler.getWorld().getWidth()-handler.getWidth();
+		}
+		
+		if(yOffset<0)
+		{
+			yOffset=0;
+		}
+		else if(yOffset>handler.getWorld().getHeight()-handler.getHeight())
+		{
+			yOffset=handler.getWorld().getHeight()-handler.getHeight();
+		}
+	}
 	public void centerEntity(Entity e)
 	{
-		xOffset = e.getX() - game.getWidth()/2 + e.getWidth()/2;
-		yOffset = e.getY() - game.getHeight()/2 + e.getHeight()/2;
+		xOffset = e.getX() - handler.getWidth()/2 + e.getWidth()/2;
+		yOffset = e.getY() - handler.getHeight()/2 + e.getHeight()/2;
+		checkBlankSpace();
 	}
 	//GETTERS SETTERS
 	public void setxOffset(float xOffset) {
@@ -36,10 +58,10 @@ public class GameCamera
 		this.yOffset = yOffset;
 	}
 
-	public GameCamera(Game game,float xOffset,float yOffset)
+	public GameCamera(Handler handler,float xOffset,float yOffset)
 	{
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
-		this.game=game;
+		this.handler=handler;
 	}
 }

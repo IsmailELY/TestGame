@@ -109,7 +109,7 @@ public class Game implements Runnable
 		Assets.init();
 		
 		this.handler = new Handler(this);
-		gameCamera = new GameCamera(this,0, 0);		
+		gameCamera = new GameCamera(handler,0, 0);		
 		gameState = new GameState(this.handler);
 		menuState = new MenuState(this.handler);
 		settingState = new SettingState(this.handler);
