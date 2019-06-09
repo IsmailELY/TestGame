@@ -13,7 +13,8 @@ public class Assets
 	public static BufferedImage magma[] = new BufferedImage[9];
 	public static BufferedImage grass[] = new BufferedImage[9];
 	public static BufferedImage rock[] = new BufferedImage[9];
-	
+	public static BufferedImage tree;
+	public static BufferedImage button[] = new BufferedImage[2];
 	
 	public static void init()
 	{
@@ -23,7 +24,15 @@ public class Assets
 		SpriteSheet Magma = new SpriteSheet(ImageLoader.loadImage("/textures/Lava_2.png"));
 		SpriteSheet Grass = new SpriteSheet(ImageLoader.loadImage("/textures/Grass_1.png"));
 		SpriteSheet Rock = new SpriteSheet(ImageLoader.loadImage("/textures/Rocks_1.png"));
+		SpriteSheet Tree = new SpriteSheet(ImageLoader.loadImage("/textures/tree.png"));
+		SpriteSheet UI = new SpriteSheet(ImageLoader.loadImage("/textures/Ui_sheet.png"));
+		//tree
+		tree = Tree.crop(0, 0, 95, 95);
 		
+		//button
+		button[0] = UI.crop(0,49, 190, 49);
+		button[1] = UI.crop(0, 99, 190, 44);
+
 		
 		//player
 		for(int j = 0 ; j<9; j++)

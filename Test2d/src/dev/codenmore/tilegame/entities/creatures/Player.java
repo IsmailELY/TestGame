@@ -1,6 +1,5 @@
-package dev.codenmore.tilegame.entities;
+package dev.codenmore.tilegame.entities.creatures;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -10,7 +9,6 @@ import dev.codenmore.tilegame.gfx.Assets;
 
 public class Player extends Creature {
 	
-	private boolean face = true;
 	
 	private Animation animDown,animUp,animLeft,animRight;
 	private BufferedImage StopAnimation;
@@ -20,7 +18,7 @@ public class Player extends Creature {
 		this.bounds.y=3*height/4;
 		this.bounds.height=height/32;
 		this.bounds.x=width/4;
-		this.bounds.width=1*width/4;
+		this.bounds.width=width/3+3;
 		
 		animUp = new Animation(180, Assets.player_form[0]);
 		animRight = new Animation(180, Assets.player_form[1]);
@@ -47,15 +45,9 @@ public class Player extends Creature {
 		xMove = 0;
 		yMove = 0;
 		if (handler.getKeyManager().up && (y+bounds.y)>0)
-		{
-			face = false;
 			yMove = -speed;
-		}	
 		else if (handler.getKeyManager().down && (y+bounds.y+bounds.height)<=handler.getWorld().getHeight())
-		{
-			face = true;
-			yMove = +speed;
-		}	
+			yMove = +speed;	
 		else if (handler.getKeyManager().left && (x+bounds.x)>0)
 			xMove = -speed;
 		else if (handler.getKeyManager().right && (x+bounds.x+bounds.width)<=handler.getWorld().getWidth())

@@ -4,38 +4,29 @@ import java.awt.Graphics;
 
 import dev.codenmore.tilegame.utils.*;
 import dev.codenmore.tilegame.Handler;
+import dev.codenmore.tilegame.entities.EntityManager;
+import dev.codenmore.tilegame.entities.creatures.Player;
+import dev.codenmore.tilegame.entities.statics.Tree;
 import dev.codenmore.tilegame.tiles.Tile;
 
 public class World 
 {
 	private int width,height;
-	private float SpawnX,SpawnY;
 	private int[][] tiles;
 	private Handler handler;
-	
-	public int getWidth() {
-		return width*Tile.TILEWIDTH;
-	}
-
-	public int getHeight() {
-		return height*Tile.TILEHEIGHT;
-	}
-
-	public float getSpawnX() 
-	{
-		return SpawnX;
-	}
-
-	public float getSpawnY() 
-	{
-		return SpawnY;
-	}
+	//Entities
+	private EntityManager entityManager;
 	
 	public World(Handler handler,String path)
 	{
+		entityManager= new EntityManager(handler,new Player(handler, 0,0,100));
+		entityManager.addEntity(new Tree(handler, 200, 300));
+		entityManager.addEntity(new Tree(handler, 800, 150));
+		
 		loadWorld(path);
 		this.handler=handler;
 	}
+	
 	
 	private void loadWorld(String path)
 	{
@@ -44,8 +35,8 @@ public class World
 		
 		this.width = Utils.parseInt(tokens[0]);
 		this.height = Utils.parseInt(tokens[1]);
-		this.SpawnX = Utils.parseFloat(tokens[2]);
-		this.SpawnY = Utils.parseFloat(tokens[3]);
+		entityManager.getPlayer().setX(Utils.parseFloat(tokens[2])*32);
+		entityManager.getPlayer().setY(Utils.parseFloat(tokens[3])*32);
 		
 		tiles = new int[width][height];
 		for (int y=0; y<height; y++)
@@ -71,7 +62,7 @@ public class World
 	
 	public void tick()
 	{
-		
+		entityManager.tick();
 	}
 	public void render(Graphics g)
 	{
@@ -87,5 +78,19 @@ public class World
 				getTile(x, y).render(g, (int)(x*Tile.TILEWIDTH - handler.getGameCamera().getxOffset()),(int)( y*Tile.TILEHEIGHT - handler.getGameCamera().getyOffset()));
 			}
 		}
+		entityManager.render(g);
+	}
+	
+	//Getters
+	public int getWidth() {
+		return width*Tile.TILEWIDTH;
+	}
+	
+	public int getHeight() {
+		return height*Tile.TILEHEIGHT;
+	}
+
+	public EntityManager getEntityManager() {
+		return entityManager;
 	}
 }

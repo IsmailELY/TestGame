@@ -19,7 +19,7 @@ public abstract class State
 	}
 	
 	//Class
-	private Handler handler;
+	protected Handler handler;
 	
 	public State(Handler handler)
 	{

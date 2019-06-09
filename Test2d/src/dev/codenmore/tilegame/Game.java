@@ -15,53 +15,6 @@ public class Game implements Runnable
 	//attributes
 	private Display display;
 	private int width,height;
-	
-	public Display getDisplay() {
-		return display;
-	}
-
-	public Thread getThread() {
-		return thread;
-	}
-
-	public boolean isRunning() {
-		return running;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public BufferStrategy getBs() {
-		return bs;
-	}
-
-	public Graphics getG() {
-		return g;
-	}
-
-	public State getGameState() {
-		return gameState;
-	}
-
-	public State getMenuState() {
-		return menuState;
-	}
-
-	public State getSettingState() {
-		return settingState;
-	}
-	
-	public int getWidth() 
-	{
-		return width;
-	}
-
-	public int getHeight() 
-	{
-		return height;
-	}
-
 	public Thread thread;
 	public boolean running = false;
 	public String title;
@@ -71,12 +24,13 @@ public class Game implements Runnable
 	private Graphics g;
 	
 	//states
-	private State gameState;
-	private State menuState;
-	private State settingState;
+	public State gameState;
+	public State menuState;
+	public State settingState;
 	
 	//input
 	private KeyManager keyManager;
+	private MouseManager mouseManager;
 	
 	//Camera
 	private GameCamera gameCamera;
@@ -84,28 +38,23 @@ public class Game implements Runnable
 	//Handler
 	private Handler handler;
 	
-	public KeyManager getKeyManager()
-	{
-		return keyManager;
-	}
-	
-	public GameCamera getGameCamera()
-	{
-		return gameCamera;
-	}
-	
 	public Game(String title,int width,int height)
 	{
 		this.height=height;
 		this.width=width;
 		this.title=title;
 		this.keyManager  = new KeyManager();
+		this.mouseManager  = new MouseManager();
 	}
 	
 	private void init ()
 	{
 		display = new Display(title, width, height);
 		display.getJFrame().addKeyListener(keyManager);
+		display.getJFrame().addMouseListener(mouseManager);
+		display.getJFrame().addMouseMotionListener(mouseManager);
+		display.getCanvas().addMouseListener(mouseManager);
+		display.getCanvas().addMouseMotionListener(mouseManager);
 		Assets.init();
 		
 		this.handler = new Handler(this);
@@ -114,7 +63,7 @@ public class Game implements Runnable
 		menuState = new MenuState(this.handler);
 		settingState = new SettingState(this.handler);
 		
-		State.setState(gameState);
+		State.setState(menuState);
 	}
 	
 	private void tick ()
@@ -187,8 +136,68 @@ public class Game implements Runnable
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	//Getters
+	public KeyManager getKeyManager()
+	{
+		return keyManager;
+	}
+	
+	public MouseManager getMouseManager()
+	{
+		return mouseManager;
+	}
+	
+	public GameCamera getGameCamera()
+	{
+		return gameCamera;
+	}
+	public Display getDisplay() {
+		return display;
+	}
+
+	public Thread getThread() {
+		return thread;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public BufferStrategy getBs() {
+		return bs;
+	}
+
+	public Graphics getG() {
+		return g;
+	}
+
+	public State getGameState() {
+		return gameState;
+	}
+
+	public State getMenuState() {
+		return menuState;
+	}
+
+	public State getSettingState() {
+		return settingState;
+	}
+	
+	public int getWidth() 
+	{
+		return width;
+	}
+
+	public int getHeight() 
+	{
+		return height;
 	}
 }
