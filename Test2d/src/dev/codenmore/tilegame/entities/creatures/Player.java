@@ -1,94 +1,190 @@
 package dev.codenmore.tilegame.entities.creatures;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import dev.codenmore.tilegame.Handler;
+import dev.codenmore.tilegame.entities.Entity;
 import dev.codenmore.tilegame.gfx.Animation;
 import dev.codenmore.tilegame.gfx.Assets;
 
 public class Player extends Creature {
 	
 	
-	private Animation animDown,animUp,animLeft,animRight;
+	private Animation animDeath;
+	private Animation[] anim = new Animation [4];
 	private BufferedImage StopAnimation;
 	
-	public Player(Handler handler,float x, float y, int health) {
+	public Player(Handler handler,float x, float y, int health) 
+	{
 		super(handler,x, y,Creature.DEFAULT_WIDTH*2,DEFAULT_HEIGHT*2, health);
 		this.bounds.y=3*height/4;
 		this.bounds.height=height/32;
 		this.bounds.x=width/4;
 		this.bounds.width=width/3+3;
 		
-		animUp = new Animation(180, Assets.player_form[0]);
-		animRight = new Animation(180, Assets.player_form[1]);
-		animDown = new Animation(180, Assets.player_form[2]);
-		animLeft = new Animation(180, Assets.player_form[3]);
+		for (int i=0; i<4;i++)
+		{
+			anim[i] = new Animation(180, Assets.player_form[i],Assets.player_stop[i]);
+		}
 		
-		StopAnimation = animDown.StopFrame();	
+		
+		animDeath = new Animation(300,Assets.DeathScene);
+		StopAnimation = anim[body].StopFrame();	
 	}
 
 	@Override
 	public void tick() 
 	{
-		animDown.tick();
-		animUp.tick();
-		animLeft.tick();
-		animRight.tick();
+		//Animation
+		for(Animation a : anim)
+		{
+			a.tick();
+		}
+		
+		//Mouvement
 		getInput();
 		move();
 		handler.getGameCamera().centerEntity(this);
+		//Attacks
+		checkAttack();
 	}
 	
+	private void checkAttack() 
+	{
+		Rectangle cb = getCollisionBounds(0,0);
+		Rectangle ar = new Rectangle();
+		int arSize = bounds.width/4;
+		
+		if(handler.getKeyManager().basic_attack)
+		{
+			ar.height = arSize;
+			ar.width = arSize;
+			
+			if(body==1) // up
+			{
+				ar.x = cb.x + cb.width/2 - arSize/2;
+				ar.y = cb.y - arSize;
+			}
+			else if(body==0) //down
+			{
+				ar.x = cb.x + cb.width/2 - arSize/2;
+				ar.y = cb.y + cb.height;
+			}
+			else if(body==2) //left
+			{
+				ar.x = cb.x - arSize;
+				ar.y = cb.y + cb.height/2 - arSize/2;
+			}
+			else if(body==3) //right
+			{
+				ar.x = cb.x + cb.width ;
+				ar.y = cb.y + cb.height/2 - arSize/2;
+			}else
+			{
+				return;
+			}
+		}
+		else if (handler.getKeyManager().spell_1)
+		{
+			
+			if(body==1) // up
+			{
+				ar.height = height;
+				ar.width = arSize;
+				ar.x = cb.x + cb.width/2 - arSize/2;
+				ar.y = cb.y - height;
+			}
+			else if(body==0) //down
+			{
+				ar.height = height;
+				ar.width = arSize;
+				ar.x = cb.x + cb.width/2 - arSize/2;
+				ar.y = cb.y + cb.height;
+			}
+			else if(body==2) //left
+			{
+				ar.height = arSize;
+				ar.width = height;
+				ar.x = cb.x - height;
+				ar.y = cb.y + cb.height/2 - arSize/2;
+			}
+			else if(body==3) //right
+			{
+				ar.height = arSize;
+				ar.width = height;
+				ar.x = cb.x + cb.width ;
+				ar.y = cb.y + cb.height/2 - arSize/2;
+			}else
+			{
+				return;
+			}
+		}
+		for(Entity e : handler.getWorld().getEntityManager().getEntities())
+		{
+			if(e.equals(this))
+				continue;
+			
+			if (ar.intersects(e.getCollisionBounds(0,0)))
+			{
+				e.hurt(strenght);
+				return;
+			}
+		}
+		
+	}
+
 	private void getInput()
 	{
 		xMove = 0;
 		yMove = 0;
-		if (handler.getKeyManager().up && (y+bounds.y)>0)
+		if (handler.getKeyManager().up )
 			yMove = -speed;
-		else if (handler.getKeyManager().down && (y+bounds.y+bounds.height)<=handler.getWorld().getHeight())
+		else if (handler.getKeyManager().down )
 			yMove = +speed;	
-		else if (handler.getKeyManager().left && (x+bounds.x)>0)
+		else if (handler.getKeyManager().left )
 			xMove = -speed;
-		else if (handler.getKeyManager().right && (x+bounds.x+bounds.width)<=handler.getWorld().getWidth())
+		else if (handler.getKeyManager().right)
 			xMove = +speed;
 	}
 
 	private BufferedImage getCurrentAnimationFrame()
-	{		
-		if(xMove<0)
+	{	
+		if(xMove!=0 || yMove!=0)
 		{
-			animRight.setIndex(0);
-			animDown.setIndex(0);
-			animUp.setIndex(0);
-			StopAnimation=animLeft.StopFrame();
-			return animLeft.getCurrentFrame();
-		}
-		else if(xMove>0)
-		{
-			animLeft.setIndex(0);
-			animDown.setIndex(0);
-			animUp.setIndex(0);
-			StopAnimation=animRight.StopFrame();
-			return animRight.getCurrentFrame();
-		}
-		if(yMove<0)
-		{
-			animDown.setIndex(0);
-			animLeft.setIndex(0);
-			animRight.setIndex(0);
-			StopAnimation=animUp.StopFrame();
-			return animUp.getCurrentFrame();
-		}
-		else if(yMove>0)
-		{
-			animLeft.setIndex(0);
-			animRight.setIndex(0);
-			animUp.setIndex(0);
-			StopAnimation=animDown.StopFrame();
-			return animDown.getCurrentFrame();
+			if(xMove<0) 
+				body=2; //left
+			else if(xMove>0)
+				body=3; //right
+			if(yMove<0)
+				body=1; //up
+			else if(yMove>0)
+				body=0; //down
+			
+			for(int i=0; i<4; i++)
+			{
+				if(i==body)
+				{
+					StopAnimation = anim[i].StopFrame();
+					continue;
+				}
+				anim[i].setIndex(0);
+			}
+			return anim[body].getCurrentFrame();
 		}
 		return StopAnimation;
+	}
+	
+	public void die()
+	{
+		x=0;
+		y=0;
+		
+		while(!animDeath.isAnimated())
+		{
+			handler.getGame().getG().drawImage(animDeath.getCurrentFrame(),0,0,1000,660,null);
+		}
 	}
 	
 	@Override

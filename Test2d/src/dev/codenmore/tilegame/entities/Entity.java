@@ -11,15 +11,19 @@ public abstract class Entity
 	protected float x,y;
 	protected Handler handler;
 	protected Rectangle bounds;
+	protected int health;
+	protected boolean active= true;
 	
-	public Entity(Handler handler,float x,float y,int width, int height)
+	
+	public Entity(Handler handler,float x,float y,int width, int height,int health)
 	{
 		this.x=x;
 		this.y=y;
 		this.height=height;
 		this.width=width;
 		this.handler=handler;
-		
+		this.health = health;
+
 		bounds = new Rectangle(0,0,width,height);
 	}
 	
@@ -27,12 +31,12 @@ public abstract class Entity
 	
 	abstract public void render(Graphics g);
 
-	public Rectangle getCollisionBounds(float xOffset,float yOffset)
+	public Rectangle getCollisionBounds(double xOffset,double yOffset)
 	{
 		return new Rectangle((int)(x + bounds.x + xOffset), (int)(y + bounds.y +yOffset), bounds.width, bounds.height);
 	}
 	
-	public boolean checkEntityCollisions(float xOffset,float yOffset)
+	public boolean checkEntityCollisions(double xOffset,double yOffset)
 	{
 		for(Entity e: handler.getWorld().getEntityManager().getEntities())
 		{
@@ -47,12 +51,27 @@ public abstract class Entity
 		return false;
 	}
 	
+	abstract public void die();
+	
+	public void hurt(int damage)
+	{
+		this.health-=damage;
+		if(health<=0)
+		{
+			active = false;
+			die();
+		}
+	}
+	
 	//Getters n Setters
-	public float getX() {
+	public float getX() 
+	{
 		return x;
+		
 	}
 
-	public void setX(float x) {
+	public void setX(float x) 
+	{
 		this.x = x;
 	}
 
@@ -79,5 +98,22 @@ public abstract class Entity
 	public void setWidth(int width) {
 		this.width = width;
 	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	
 }

@@ -1,83 +1,105 @@
 package dev.codenmore.tilegame.entities.creatures;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import dev.codenmore.tilegame.Handler;
 import dev.codenmore.tilegame.gfx.Animation;
 import dev.codenmore.tilegame.gfx.Assets;
 
-public class Gobelin extends Creature 
+public class Gobelin extends Monsters 
 {
-	private Animation animDown,animUp,animLeft,animRight;
+	private Animation[] anim = new Animation [4];
 	private BufferedImage StopAnimation;
 
 	public Gobelin(Handler handler, float x, float y, int health) 
 	{
 		super(handler,x, y,Creature.DEFAULT_WIDTH*2,DEFAULT_HEIGHT*2, health);
 		this.bounds.y=3*height/4;
-		this.bounds.height=height/32;
+		this.bounds.height=height/4;
 		this.bounds.x=width/4;
 		this.bounds.width=width/3+3;
+		this.store_bounds = bounds;
 		
-		animUp = new Animation(180, Assets.gobelin_form[0]);
-		animRight = new Animation(180, Assets.gobelin_form[1]);
-		animDown = new Animation(180, Assets.gobelin_form[2]);
-		animLeft = new Animation(180, Assets.gobelin_form[3]);
+		for (int i=0; i<4;i++)
+		{
+			anim[i] = new Animation(180, Assets.gobelin_form[i],Assets.gobelin_stop[i]);
+		}
 		
-		StopAnimation = animDown.StopFrame();	
+		StopAnimation = anim[body].StopFrame();		
 	}
 
 	@Override
 	public void tick() 
 	{
-		animDown.tick();
-		animUp.tick();
-		animLeft.tick();
-		animRight.tick();
+		//Animation
+		for(Animation a : anim)
+		{
+			a.tick();
+		}
 		move();
 	}
 
 	@Override
 	public void render(Graphics g) 
 	{
-		g.drawImage(getCurrentAnimationFrame(),(int)(x - handler.getGameCamera().getxOffset()),(int)(y- handler.getGameCamera().getyOffset()),width,height,null);
+		if(active)
+		{
+			bounds = store_bounds;
+			g.drawImage(getCurrentAnimationFrame(),(int)(x - handler.getGameCamera().getxOffset()),(int)(y- handler.getGameCamera().getyOffset()),width,height,null);
+		}
+		else if(death<timer)
+		{
+			deathAnimation(g);
+			this.bounds = new Rectangle();
+			death++;
+		}
+		else if(death<15*timer)
+			death++;
+		else
+		{
+			death=0;
+			active=true;
+		}
 	}
 
 	private BufferedImage getCurrentAnimationFrame()
-	{		
-		if(xMove<0)
+	{	
+		if(xMove!=0 || yMove!=0)
 		{
-			animRight.setIndex(0);
-			animDown.setIndex(0);
-			animUp.setIndex(0);
-			StopAnimation=animLeft.StopFrame();
-			return animLeft.getCurrentFrame();
-		}
-		else if(xMove>0)
-		{
-			animLeft.setIndex(0);
-			animDown.setIndex(0);
-			animUp.setIndex(0);
-			StopAnimation=animRight.StopFrame();
-			return animRight.getCurrentFrame();
-		}
-		if(yMove<0)
-		{
-			animDown.setIndex(0);
-			animLeft.setIndex(0);
-			animRight.setIndex(0);
-			StopAnimation=animUp.StopFrame();
-			return animUp.getCurrentFrame();
-		}
-		else if(yMove>0)
-		{
-			animLeft.setIndex(0);
-			animRight.setIndex(0);
-			animUp.setIndex(0);
-			StopAnimation=animDown.StopFrame();
-			return animDown.getCurrentFrame();
+			if(xMove<0) 
+				body=2; //left
+			else if(xMove>0)
+				body=3; //right
+			if(yMove<0)
+				body=1; //up
+			else if(yMove>0)
+				body=0; //down
+			
+			for(int i=0; i<4; i++)
+			{
+				if(i==body)
+				{
+					StopAnimation = anim[i].StopFrame();
+					continue;
+				}
+				anim[i].setIndex(0);
+			}
+			return anim[body].getCurrentFrame();
 		}
 		return StopAnimation;
+	}
+
+	@Override
+	public void die() 
+	{
+		
+	}
+
+	@Override
+	void deathAnimation(Graphics g) 
+	{
+		g.drawImage(Assets.dead_gobelin[body],(int)(x - handler.getGameCamera().getxOffset()),(int)(y- handler.getGameCamera().getyOffset()),width,height,null);
 	}
 }

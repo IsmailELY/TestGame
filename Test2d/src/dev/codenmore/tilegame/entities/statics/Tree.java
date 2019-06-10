@@ -17,6 +17,7 @@ public class Tree extends StaticEntity
 		bounds.width=width/2;
 		bounds.y=2*height/3;
 		bounds.height=height/4;
+		this.health = 200;
 	}
 
 	@Override
@@ -28,7 +29,16 @@ public class Tree extends StaticEntity
 	@Override
 	public void render(Graphics g) 
 	{
-		g.drawImage(Assets.tree,(int)(x- handler.getGameCamera().getxOffset()),(int)(y- handler.getGameCamera().getyOffset()),width,height,null);
+		if(active)
+			g.drawImage(Assets.tree,(int)(x- handler.getGameCamera().getxOffset()),(int)(y- handler.getGameCamera().getyOffset()),width,height,null);
+		else
+			g.drawImage(Assets.dead_tree,(int)(x- handler.getGameCamera().getxOffset()),(int)(y- handler.getGameCamera().getyOffset()),width,height,null);
+	}
+
+	@Override
+	public void die() 
+	{
+		
 	}
 
 }

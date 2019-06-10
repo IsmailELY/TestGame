@@ -3,9 +3,6 @@ package dev.codenmore.tilegame.states;
 import java.awt.Graphics;
 
 import dev.codenmore.tilegame.Handler;
-import dev.codenmore.tilegame.entities.*;
-import dev.codenmore.tilegame.entities.creatures.Player;
-import dev.codenmore.tilegame.entities.statics.Tree;
 import dev.codenmore.tilegame.worlds.*;
 
 public class GameState extends State
